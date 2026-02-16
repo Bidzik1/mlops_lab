@@ -5,20 +5,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 
 
-def load_data(path: str) -> pd.DataFrame:
-    return pd.read_csv(path)
-
-
 def preprocess_data(df: pd.DataFrame):
-    if "Property ID" in df.columns:
-        df = df.drop(columns=["Property ID"])
-
-    if "Posted On" in df.columns:
-        df = df.drop(columns=["Posted On"])
-
-    if "Floor" in df.columns:
-        df = df.drop(columns=["Floor"])
-
     y = df["Rent"]
     X = df.drop(columns=["Rent"])
 

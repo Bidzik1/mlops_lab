@@ -1,0 +1,42 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare.py data/raw/House_Rent_10M_balanced_40cities.csv 
+      data/prepared
+    deps:
+    - path: data/raw/House_Rent_10M_balanced_40cities.csv
+      hash: md5
+      md5: 04a2335c7d615996b6e266dcbe991501
+      size: 1303141128
+    - path: src/prepare.py
+      hash: md5
+      md5: c089380d4d02831fcb56cfcbeec4d9ef
+      size: 1091
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: 6ad112e5d29513829e630563dffda089.dir
+      size: 70982664
+      nfiles: 2
+  train:
+    cmd: python src/train.py data/prepared data/models
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: 6ad112e5d29513829e630563dffda089.dir
+      size: 70982664
+      nfiles: 2
+    - path: src/train.py
+      hash: md5
+      md5: f4017a0035343ff456495b2af71ba22b
+      size: 3569
+    - path: src/utils.py
+      hash: md5
+      md5: 30c51968a7d4787752568e28d1cd76e0
+      size: 714
+    outs:
+    - path: data/models
+      hash: md5
+      md5: 7d9eee73071dc0da95ec02059847535f.dir
+      size: 490195
+      nfiles: 1

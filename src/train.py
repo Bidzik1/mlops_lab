@@ -1,27 +1,29 @@
 import argparse
 import mlflow
 import mlflow.sklearn
-import os
-
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import Pipeline
 
-from data_preprocessing import load_data, preprocess_data
+from data_preprocessing import preprocess_data
 from utils import regression_metrics, plot_feature_importance
 
+import os
+import pandas as pd
+import joblib
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train RandomForest for House Rent Prediction")
 
-    parser.add_argument("--data_path", type=str,
-                        default="data/raw/House_Rent_10M_balanced_40cities.csv")
+    # DVC paths
+    parser.add_argument("input_dir")
+    parser.add_argument("output_dir")
 
+    # Model hyperparameters
     parser.add_argument("--n_estimators", type=int, default=100)
     parser.add_argument("--max_depth", type=int, default=5)
-    parser.add_argument("--test_size", type=float, default=0.2)
     parser.add_argument("--random_state", type=int, default=365)
 
+    # MLflow metadata
     parser.add_argument("--experiment_name", type=str,
                         default="House_Rent_Prediction")
 
@@ -33,15 +35,17 @@ def parse_args():
 
 def main():
     args = parse_args()
-    df = load_data(args.data_path)
-    df = df.sample(n=1000000, random_state=365)
-    X, y, preprocessor = preprocess_data(df)
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        test_size=args.test_size,
-        random_state=args.random_state
-    )
+    os.makedirs(args.output_dir, exist_ok=True)
+
+    train_path = os.path.join(args.input_dir, "train.csv")
+    test_path = os.path.join(args.input_dir, "test.csv")
+
+    train_df = pd.read_csv(train_path)
+    test_df = pd.read_csv(test_path)
+
+    X_train, y_train, preprocessor = preprocess_data(train_df)
+    X_test, y_test, _ = preprocess_data(test_df)
 
     model = RandomForestRegressor(
         n_estimators=args.n_estimators,
@@ -63,7 +67,6 @@ def main():
         #Логування параметрів
         mlflow.log_param("n_estimators", args.n_estimators)
         mlflow.log_param("max_depth", args.max_depth)
-        mlflow.log_param("test_size", args.test_size)
         mlflow.log_param("random_state", args.random_state)
 
         #Логування тегів
@@ -91,6 +94,7 @@ def main():
         mlflow.log_metric("test_r2", test_r2)
 
         #Логування моделі
+        joblib.dump(pipeline, os.path.join(args.output_dir, "model.pkl"))
         mlflow.sklearn.log_model(pipeline, "random_forest_model")
 
         feature_names = (

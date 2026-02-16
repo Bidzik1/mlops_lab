@@ -1,0 +1,17 @@
+stages:
+  prepare:
+    cmd: python src/prepare.py data/raw/House_Rent_10M_balanced_40cities.csv data/prepared
+    deps:
+      - data/raw/House_Rent_10M_balanced_40cities.csv
+      - src/prepare.py
+    outs:
+      - data/prepared
+
+  train:
+    cmd: python src/train.py data/prepared data/models
+    deps:
+      - data/prepared
+      - src/train.py
+      - src/utils.py
+    outs:
+      - data/models
