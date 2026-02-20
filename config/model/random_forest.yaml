@@ -1,0 +1,3 @@
+model:
+  type: random_forest
+  random_state: 365

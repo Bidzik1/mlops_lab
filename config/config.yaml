@@ -1,0 +1,37 @@
+defaults:
+  - hpo: optuna
+
+seed: 365
+
+mlflow:
+  tracking_uri: "http://127.0.0.1:5000"
+  experiment_name: "HPO_Lab3"
+  log_model: true
+  register_model: false
+  model_name: "BestOptimizedModel"
+  stage: "Staging"
+
+data:
+  processed_path: "data/prepared/train.csv"
+
+model:
+  type: "random_forest"
+
+hpo:
+  n_trials: 20
+  sampler: "tpe"
+  metric: "rmse"
+  direction: "minimize"
+  use_cv: false
+  cv_folds: 5
+
+  random_forest:
+    n_estimators: { low: 50, high: 300 }
+    max_depth: { low: 3, high: 15 }
+    min_samples_split: { low: 2, high: 10 }
+    min_samples_leaf: { low: 1, high: 5 }
+
+hydra:
+  run:
+    dir: .
+  output_subdir: null

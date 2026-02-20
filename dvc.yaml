@@ -8,7 +8,7 @@ stages:
       - data/prepared
 
   train:
-    cmd: python src/train.py data/prepared data/models
+    cmd: python src/train.py data/prepared data/models --n_estimators 100 --max_depth 10 --random_state 365
     deps:
       - data/prepared
       - src/train.py

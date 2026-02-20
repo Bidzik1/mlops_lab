@@ -1,0 +1,5 @@
+hpo:
+  sampler: random
+  n_trials: 20
+  direction: minimize
+  metric: rmse
