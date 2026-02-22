@@ -12,7 +12,12 @@ def main():
 
     df = pd.read_csv(input_file)
 
-    df = df.sample(n=1000000, random_state=365)
+    max_rows = int(os.getenv("MAX_ROWS", "0"))
+    if max_rows > 0:
+        print(f"CI mode: using first {max_rows} rows")
+        df = df.head(max_rows)
+    else:
+        df = df.sample(n=1000000, random_state=365)
 
     drop_columns = ["Property ID", "Posted On", "Floor", "Area Locality", "City"]
     for col in drop_columns:

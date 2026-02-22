@@ -37,6 +37,12 @@ def parse_args():
 def main():
     args = parse_args()
 
+    CI_MODE = os.getenv("CI", "false").lower() == "true"
+    if CI_MODE:
+        print("Running in CI mode")
+        args.n_estimators = 20
+        args.max_depth = 3
+
     os.makedirs(args.output_dir, exist_ok=True)
 
     train_path = os.path.join(args.input_dir, "train.csv")

@@ -151,6 +151,12 @@ def main(cfg: DictConfig):
 
     set_global_seed(cfg.seed)
 
+    CI_MODE = os.getenv("CI", "false").lower() == "true"
+    if CI_MODE:
+        print("Running HPO in CI mode")
+        cfg.hpo.n_trials = 5
+        cfg.hpo.cv_folds = 2
+
     mlflow.set_tracking_uri(cfg.mlflow.tracking_uri)
     mlflow.set_experiment(cfg.mlflow.experiment_name)
 

@@ -39,6 +39,9 @@ jobs:
           dvc pull
 
       - name: Run DVC pipeline
+        env:
+          CI: "true"
+          MAX_ROWS: "5000"
         run: |
           dvc repro
 
