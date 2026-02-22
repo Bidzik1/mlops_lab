@@ -19,7 +19,8 @@ stages:
       size: 70982664
       nfiles: 2
   train:
-    cmd: python src/train.py data/prepared data/models
+    cmd: python src/train.py data/prepared data/models --n_estimators 100 
+      --max_depth 10 --random_state 365
     deps:
     - path: data/prepared
       hash: md5
@@ -28,8 +29,8 @@ stages:
       nfiles: 2
     - path: src/train.py
       hash: md5
-      md5: 5b0dce8878bee2dbcc404579ce9bfa6f
-      size: 3658
+      md5: fbae08ba560d5d55a19bd9d11fc710a0
+      size: 3976
     - path: src/utils.py
       hash: md5
       md5: 30c51968a7d4787752568e28d1cd76e0
@@ -37,6 +38,28 @@ stages:
     outs:
     - path: data/models
       hash: md5
-      md5: 7d9eee73071dc0da95ec02059847535f.dir
-      size: 490195
+      md5: 813598388255535915dc700f0c132a3e.dir
+      size: 14726323
       nfiles: 1
+  optimize:
+    cmd: python src/optimize.py
+    deps:
+    - path: config/
+      hash: md5
+      md5: 30946f8138c9b646969d7d8e44d73ae1.dir
+      size: 827
+      nfiles: 4
+    - path: data/prepared
+      hash: md5
+      md5: 6ad112e5d29513829e630563dffda089.dir
+      size: 70982664
+      nfiles: 2
+    - path: src/optimize.py
+      hash: md5
+      md5: 7dd8d5de9689a1387dd4cf31b1bc8892
+      size: 6152
+    outs:
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 50e00c3299076b3e0530f283b2f8ca47
+      size: 2450433

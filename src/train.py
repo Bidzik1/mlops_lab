@@ -10,6 +10,7 @@ from utils import regression_metrics, plot_feature_importance
 import os
 import pandas as pd
 import joblib
+import json
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train RandomForest for House Rent Prediction")
@@ -84,6 +85,16 @@ def main():
         #Test predictions
         y_test_pred = pipeline.predict(X_test)
         test_rmse, test_r2 = regression_metrics(y_test, y_test_pred)
+
+        metrics = {
+            "train_rmse": float(train_rmse),
+            "train_r2": float(train_r2),
+            "test_rmse": float(test_rmse),
+            "test_r2": float(test_r2)
+        }
+
+        with open("metrics.json", "w", encoding="utf-8") as f:
+            json.dump(metrics, f, indent=2)
 
         #Логування метрик (TRAIN)
         mlflow.log_metric("train_rmse", train_rmse)

@@ -15,3 +15,12 @@ stages:
       - src/utils.py
     outs:
       - data/models
+
+  optimize:
+    cmd: python src/optimize.py
+    deps:
+      - src/optimize.py
+      - config/
+      - data/prepared
+    outs:
+      - models/best_model.pkl

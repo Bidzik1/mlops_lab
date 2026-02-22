@@ -9,3 +9,7 @@ dvc
 joblib
 optuna
 hydra-core
+pytest
+flake8
+black
+cml

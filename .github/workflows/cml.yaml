@@ -1,0 +1,62 @@
+name: Model CI (Train, Test, Report)
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint (flake8)
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Format check (black)
+        run: |
+          black . --check
+
+      - name: DVC pull
+        run: |
+          dvc pull
+
+      - name: Run DVC pipeline
+        run: |
+          dvc repro
+
+      - name: Run tests
+        env:
+          R2_THRESHOLD: "0.50"
+          RMSE_THRESHOLD: "15000"
+        run: |
+          pytest -q
+
+      - name: Create CML report (PR only)
+        if: github.event_name == 'pull_request'
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Model Metrics" > report.md
+          cat metrics.json >> report.md
+          echo "" >> report.md
+          echo "## Feature Importance" >> report.md
+          cml publish feature_importance.png --md >> report.md
+          cml comment create report.md
