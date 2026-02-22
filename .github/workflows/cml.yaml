@@ -34,16 +34,13 @@ jobs:
         run: |
           black . --check
 
-      - name: DVC pull
-        run: |
-          dvc pull
+      - name: Prepare dataset
+        run: python src/prepare.py --max-rows 5000
 
-      - name: Run DVC pipeline
+      - name: Train
         env:
           CI: "true"
-          MAX_ROWS: "5000"
-        run: |
-          dvc repro
+        run: python src/train.py
 
       - name: Run tests
         env:
