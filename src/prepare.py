@@ -33,18 +33,14 @@ def main():
         "Furnishing Status",
         "Tenant Preferred",
         "Point of Contact",
-        "Rent"
+        "Rent",
     ]
 
     df = df[selected_columns]
 
     df = df.dropna()
 
-    train_df, test_df = train_test_split(
-        df,
-        test_size=0.2,
-        random_state=365
-    )
+    train_df, test_df = train_test_split(df, test_size=0.2, random_state=365)
 
     train_df.to_csv(os.path.join(output_dir, "train.csv"), index=False)
     test_df.to_csv(os.path.join(output_dir, "test.csv"), index=False)

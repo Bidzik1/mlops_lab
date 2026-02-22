@@ -2,6 +2,7 @@ import os
 import json
 import pandas as pd
 
+
 # PREPARE STAGE TEST
 def test_prepare_stage_output():
     data_path = "data/prepared/train.csv"
@@ -18,7 +19,7 @@ def test_prepare_stage_output():
         "Furnishing Status",
         "Tenant Preferred",
         "Point of Contact",
-        "Rent"
+        "Rent",
     }
 
     missing = required_cols - set(df.columns)
