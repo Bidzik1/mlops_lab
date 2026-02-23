@@ -37,6 +37,9 @@ jobs:
       - name: Prepare dataset
         run: python src/prepare.py --max-rows 5000
 
+      - name: Run prepare tests
+        run: pytest tests/test_prepare.py -q
+
       - name: Train
         env:
           CI: "true"
@@ -47,7 +50,7 @@ jobs:
           R2_THRESHOLD: "0.50"
           RMSE_THRESHOLD: "15000"
         run: |
-          pytest -q
+          pytest tests/test_model.py -q
 
       - name: Create CML report (PR only)
         if: github.event_name == 'pull_request'
