@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  airflow:
+    build:
+      context: ..
+      dockerfile: airflow/Dockerfile
+    container_name: airflow
+    user: "${AIRFLOW_UID:-50000}:0"
+    volumes:
+      - ../dags:/opt/airflow/dags
+      - ../:/opt/mlops_lab_1
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    ports:
+      - "8080:8080"
+    command: standalone

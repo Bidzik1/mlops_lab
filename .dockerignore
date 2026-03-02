@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# DVC cache
+.dvc
+.dvc/cache
+
+# Data
+data/raw
+data/prepared
+
+# Models
+data/models
+models/
+*.pkl
+
+# MLflow
+mlruns/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# CI
+.github/
+
+# Airflow
+airflow/
+
+# Env
+.env
+venv/

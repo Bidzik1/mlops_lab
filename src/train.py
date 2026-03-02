@@ -65,6 +65,7 @@ def main():
 
     pipeline = Pipeline(steps=[("preprocessor", preprocessor), ("model", model)])
 
+    mlflow.set_tracking_uri("file:./mlruns")
     mlflow.set_experiment(args.experiment_name)
     with mlflow.start_run():
 
